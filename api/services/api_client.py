@@ -25,11 +25,11 @@ class APIClient:
         self.retry_delay = settings.RETRY_DELAY
     
     #Calculate backoff delay
-    def _exponential_backoff(self, attempt: int) -> float:
+    def _exponential_backoff(self, attempt: int):
         return self.retry_delay * (2 ** attempt) + random.uniform(0, 0.1)
 
     # Making HTTP request with backoff retry logic
-    def _make_request_with_retry(self, method: str, endpoint: str, **kwargs) -> Optional[requests.Response]:
+    def _make_request_with_retry(self, method: str, endpoint: str, **kwargs):
         url = f"{self.base_url}{endpoint}"
         
         for attempt in range(self.max_retries):
@@ -79,7 +79,7 @@ class APIClient:
         return None
     
     #Fetch data from the API.
-    def fetch_data(self, batch_id: int = 1) -> Tuple[Optional[List[Dict]], Optional[str]]:
+    def fetch_data(self, batch_id: int = 1):
         endpoint = f"/api/data?batch={batch_id}"
         
         response = self._make_request_with_retry('GET', endpoint)
@@ -99,7 +99,7 @@ class APIClient:
             return None, f"API error: {response.status_code}"
 
     #SubmitTING cleaned data to the API.
-    def submit_data(self, candidate_name: str, batch_id: int, cleaned_items: List[Dict]) -> Tuple[Optional[Dict], Optional[str]]:
+    def submit_data(self, candidate_name: str, batch_id: int, cleaned_items: List[Dict]):
         endpoint = "/api/submit"
         
         payload = {
@@ -125,7 +125,7 @@ class APIClient:
             return None, f"API error: {response.status_code}"
     
     #API health check
-    def health_check(self) -> Tuple[bool, Optional[str]]:
+    def health_check(self):
         try:
             response = self.session.get(f"{self.base_url}/health", timeout=5)
             return response.status_code == 200, None
