@@ -1,6 +1,5 @@
 
 #API client for interacting with the unreliable external API.
-
 import requests
 import time
 import logging
